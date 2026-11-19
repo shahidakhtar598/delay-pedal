@@ -17,15 +17,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Locate android-app folder
+      - name: Unpack ZIP and locate android-app
         id: paths
         run: |
-          if [ -d "android-app" ]; then
+          ZIP_FILE=$(ls *.zip 2>/dev/null | head -n 1 || true)
+          if [ -n "$ZIP_FILE" ]; then
+            unzip -oq "$ZIP_FILE" -d _unpacked
+          fi
+
+          if [ -d "_unpacked/dd7-vocal-delay-pedal/android-app" ]; then
+            echo "app_dir=_unpacked/dd7-vocal-delay-pedal/android-app" >> "$GITHUB_OUTPUT"
+          elif [ -d "android-app" ]; then
             echo "app_dir=android-app" >> "$GITHUB_OUTPUT"
           elif [ -d "dd7-vocal-delay-pedal/android-app" ]; then
             echo "app_dir=dd7-vocal-delay-pedal/android-app" >> "$GITHUB_OUTPUT"
           else
-            echo "android-app folder nahi mila!"
+            echo "ZIP ya android-app folder nahi mila!"
             ls -la
             exit 1
           fi
