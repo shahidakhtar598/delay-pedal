@@ -1,0 +1,23 @@
+# Gradle & Android Studio
+.gradle/
+build/
+**/build/
+local.properties
+*.iml
+.idea/
+.cxx/
+captures/
+*.apk
+*.aab
+*.jks
+*.keystore
+
+# Secrets & Backend
+.env
+license-backend/.env
+admin-tools/offline-keygen/*.pem
+admin-tools/offline-keygen/keys.json
+
+# OS / Build artifacts
+.DS_Store
+Thumbs.db

@@ -1,0 +1,10 @@
+project_id = "dd7x-vocal-delay-licensing"
+
+[functions.activate-license]
+verify_jwt = false
+
+[functions.generate-key]
+verify_jwt = false
+
+[functions.revoke-license]
+verify_jwt = false

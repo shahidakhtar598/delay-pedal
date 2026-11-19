@@ -1,0 +1,21 @@
+# Copy this file to local.properties and fill in your values. NEVER commit local.properties!
+sdk.dir=/path/to/Android/Sdk
+
+# Release Signing Keystore
+RELEASE_STORE_FILE=../keys/naatdelay-release.jks
+RELEASE_STORE_PASSWORD=change_me_store_pass
+RELEASE_KEY_ALIAS=naatdelay_prod
+RELEASE_KEY_PASSWORD=change_me_key_pass
+
+# Ed25519 Public Key (32-byte Base64 from `node admin-tools/offline-keygen/keygen.mjs init`)
+LICENSE_PUBLIC_KEY_ED25519=REPLACE_WITH_BASE64_ED25519_PUBLIC_KEY
+
+# Optional Supabase License Activation Backend
+LICENSE_API_BASE_URL=https://YOUR_PROJECT_REF.supabase.co/functions/v1
+SUPABASE_ANON_KEY=REPLACE_WITH_SUPABASE_PUBLISHABLE_ANON_KEY
+
+# Founder WhatsApp Click-to-Chat Number (digits only with country code, e.g. 9198XXXXXXXX)
+FOUNDER_WHATSAPP_NUMBER=919800000000
+
+# Trial export cap in seconds
+FREE_TRIAL_EXPORT_LIMIT_SEC=30
