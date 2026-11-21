@@ -46,6 +46,7 @@ jobs:
             "$CPP/dsp/ModLfo.cpp" \
             "$CPP/dsp/PingPongMatrix.cpp" \
             "$CPP/dsp/SoftLimiter.cpp" \
+            "$CPP/dsp/HallReverb.cpp" \
             "$CPP/dsp/DelayEngine.cpp" \
             "$CPP/io/WavWriter.cpp" \
             "$CPP/io/Mp3Encoder.cpp" \
