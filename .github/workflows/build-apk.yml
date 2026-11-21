@@ -23,6 +23,7 @@ jobs:
           ZIP_FILE=$(ls *.zip 2>/dev/null | head -n 1 || true)
           if [ -n "$ZIP_FILE" ]; then
             unzip -oq "$ZIP_FILE" -d _unpacked
+            python3 -c 'from pathlib import Path; p=Path("_unpacked/dd7-vocal-delay-pedal/android-app/app/src/main/java/com/naatdelay/dd7/ui/components/PingPongToggle.kt"); p.write_text(p.read_text().replace("PING-PONG\nSTEREO","PING-PONG\\nSTEREO"))'
           fi
 
           if [ -d "_unpacked/dd7-vocal-delay-pedal/android-app" ]; then
