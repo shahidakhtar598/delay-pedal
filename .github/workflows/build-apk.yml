@@ -84,7 +84,7 @@ jobs:
           SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
           FOUNDER_WHATSAPP_NUMBER=${WA_NUM}
                     FOUNDER_UPI_ID=${{ secrets.FOUNDER_UPI_ID }}
-          APP_PRICE_INR=249
+          APP_PRICE_INR=199
 
           FREE_TRIAL_EXPORT_LIMIT_SEC=30
           EOF
