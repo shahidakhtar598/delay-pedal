@@ -89,7 +89,7 @@ jobs:
           FOUNDER_WHATSAPP_NUMBER=${WA_NUM}
           FOUNDER_UPI_ID=${{ secrets.FOUNDER_UPI_ID }}
           APP_PRICE_INR=199
-          FREE_TRIAL_EXPORT_LIMIT_SEC=30okio
+          FREE_TRIAL_EXPORT_LIMIT_SEC=30
           EOF
           sed -i 's/isMinifyEnabled = true/isMinifyEnabled = false/g; s/isShrinkResources = true/isShrinkResources = false/g' "${{ steps.paths.outputs.app_dir }}/app/build.gradle.kts"
       - name: Build Signed Release APK
