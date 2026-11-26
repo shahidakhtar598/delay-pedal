@@ -89,9 +89,9 @@ jobs:
           FOUNDER_WHATSAPP_NUMBER=${WA_NUM}
           FOUNDER_UPI_ID=${{ secrets.FOUNDER_UPI_ID }}
           APP_PRICE_INR=199
-          FREE_TRIAL_EXPORT_LIMIT_SEC=30
+          FREE_TRIAL_EXPORT_LIMIT_SEC=30okio
           EOF
-          printf "\n-dontwarn org.bouncycastle.**\n-dontwarn okhttp3.**\n-dontwarn okio.**\n-dontwarn com.google.zxing.**\n-dontwarn javax.naming.**\n-dontwarn java.lang.management.**\n-keep class org.bouncycastle.** { *; }\n" >> "${{ steps.paths.outputs.app_dir }}/app/proguard-rules.pro"
+          sed -i 's/isMinifyEnabled = true/isMinifyEnabled = false/g; s/isShrinkResources = true/isShrinkResources = false/g' "${{ steps.paths.outputs.app_dir }}/app/build.gradle.kts"
       - name: Build Signed Release APK
         working-directory: ${{ steps.paths.outputs.app_dir }}
         run: gradle assembleRelease --no-daemon
