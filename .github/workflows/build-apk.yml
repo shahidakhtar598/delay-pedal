@@ -91,7 +91,7 @@ jobs:
           APP_PRICE_INR=199
           FREE_TRIAL_EXPORT_LIMIT_SEC=30
           EOF
-
+          printf "\n-dontwarn org.bouncycastle.**\n-dontwarn okhttp3.**\n-dontwarn okio.**\n-dontwarn com.google.zxing.**\n-dontwarn javax.naming.**\n-dontwarn java.lang.management.**\n-keep class org.bouncycastle.** { *; }\n" >> "${{ steps.paths.outputs.app_dir }}/app/proguard-rules.pro"
       - name: Build Signed Release APK
         working-directory: ${{ steps.paths.outputs.app_dir }}
         run: gradle assembleRelease --no-daemon
