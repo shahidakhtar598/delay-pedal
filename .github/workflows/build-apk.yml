@@ -1,4 +1,4 @@
-name: Build DD-7X Vocal Delay APK
+name: Build DD-7X Vocal Delay Release APK
 
 on:
   workflow_dispatch:
@@ -20,18 +20,15 @@ jobs:
       - name: Unpack ZIP and locate android-app
         id: paths
         run: |
-          ZIP_FILE=$(ls *.zip 2>/dev/null | head -n 1 || true)
+          ZIP_FILE=$(ls -t *.zip 2>/dev/null | head -n 1 || true)
           if [ -n "$ZIP_FILE" ]; then
             unzip -oq "$ZIP_FILE" -d _unpacked
-            python3 -c 'from pathlib import Path; p=Path("_unpacked/dd7-vocal-delay-pedal/android-app/app/src/main/java/com/naatdelay/dd7/ui/components/PingPongToggle.kt"); p.write_text(p.read_text().replace("PING-PONG\nSTEREO","PING-PONG\\nSTEREO"))'
           fi
 
           if [ -d "_unpacked/dd7-vocal-delay-pedal/android-app" ]; then
             echo "app_dir=_unpacked/dd7-vocal-delay-pedal/android-app" >> "$GITHUB_OUTPUT"
           elif [ -d "android-app" ]; then
             echo "app_dir=android-app" >> "$GITHUB_OUTPUT"
-          elif [ -d "dd7-vocal-delay-pedal/android-app" ]; then
-            echo "app_dir=dd7-vocal-delay-pedal/android-app" >> "$GITHUB_OUTPUT"
           else
             echo "ZIP ya android-app folder nahi mila!"
             ls -la
@@ -44,10 +41,10 @@ jobs:
           g++ -std=c++20 -O2 -I"$CPP" \
             "$CPP/dsp/DelayLine.cpp" \
             "$CPP/dsp/AnalogFilter.cpp" \
+            "$CPP/dsp/HallReverb.cpp" \
             "$CPP/dsp/ModLfo.cpp" \
             "$CPP/dsp/PingPongMatrix.cpp" \
             "$CPP/dsp/SoftLimiter.cpp" \
-            "$CPP/dsp/HallReverb.cpp" \
             "$CPP/dsp/DelayEngine.cpp" \
             "$CPP/io/WavWriter.cpp" \
             "$CPP/io/Mp3Encoder.cpp" \
@@ -73,29 +70,35 @@ jobs:
         with:
           gradle-version: "8.10.2"
 
-      - name: Generate local.properties
+      - name: Decode Permanent Release Keystore & Generate local.properties
         env:
           WA_NUM: ${{ github.event.inputs.whatsapp_number || secrets.FOUNDER_WHATSAPP_NUMBER || '919800000000' }}
+          KS_B64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+          KS_PASS: ${{ secrets.RELEASE_STORE_PASSWORD }}
         run: |
+          echo "$KS_B64" | base64 --decode > "${{ steps.paths.outputs.app_dir }}/naatdelay-release.jks"
           cat <<EOF > "${{ steps.paths.outputs.app_dir }}/local.properties"
           sdk.dir=${ANDROID_HOME}
+          RELEASE_STORE_FILE=naatdelay-release.jks
+          RELEASE_STORE_PASSWORD=${KS_PASS}
+          RELEASE_KEY_ALIAS=naatdelay_prod
+          RELEASE_KEY_PASSWORD=${KS_PASS}
           LICENSE_PUBLIC_KEY_ED25519=${{ secrets.LICENSE_PUBLIC_KEY_ED25519 }}
           LICENSE_API_BASE_URL=${{ secrets.LICENSE_API_BASE_URL }}
           SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
           FOUNDER_WHATSAPP_NUMBER=${WA_NUM}
-                    FOUNDER_UPI_ID=${{ secrets.FOUNDER_UPI_ID }}
+          FOUNDER_UPI_ID=${{ secrets.FOUNDER_UPI_ID }}
           APP_PRICE_INR=199
-
           FREE_TRIAL_EXPORT_LIMIT_SEC=30
           EOF
 
-      - name: Build Android APK
+      - name: Build Signed Release APK
         working-directory: ${{ steps.paths.outputs.app_dir }}
-        run: gradle assembleDebug --no-daemon
+        run: gradle assembleRelease --no-daemon
 
-      - name: Upload Downloadable APK
+      - name: Upload Signed Release APK
         uses: actions/upload-artifact@v4
         with:
-          name: DD7X-Vocal-Delay-APK
-          path: ${{ steps.paths.outputs.app_dir }}/app/build/outputs/apk/debug/*.apk
+          name: DD7X-Vocal-Delay-Release-APK
+          path: ${{ steps.paths.outputs.app_dir }}/app/build/outputs/apk/release/*.apk
           if-no-files-found: error
